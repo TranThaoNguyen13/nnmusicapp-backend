@@ -1,0 +1,63 @@
+{
+	"folders": [
+		{
+			"path": "../../../xampp/htdocs/tuan6"
+		},
+		{
+			"path": "../../../xampp/htdocs/Doan"
+		},
+		{
+			"path": "../Downloads/php-mvc-master"
+		},
+		{
+			"path": "../../../xampp/htdocs/Doan (1)"
+		},
+		{
+			"path": "../../../xampp/htdocs/Đồ án (1) (1) (2)"
+		},
+		{
+			"path": "../../../xampp/htdocs/Phonghoc23IT.EB066"
+		},
+		{
+			"path": "../my-cosmetics"
+		},
+		{
+			"path": "../../../xampp/htdocs/Cua_hang_my_pham"
+		},
+		{
+			"path": "../NguyenNhung-cosmetics"
+		},
+		{
+			"path": "../NN-cosmetics"
+		},
+		{
+			"path": "../Downloads/lab2/lab2"
+		},
+		{
+			"path": "../Downloads/javaweb/javaweb"
+		},
+		{
+			"path": "../Downloads/Javaweb (1)"
+		},
+		{
+			"path": "../../../xampp/htdocs/appmusic_api"
+		},
+		{
+			"path": "../../../xampp/htdocs/nnmusic_api"
+		},
+		{
+			"path": "../../../xampp/htdocs/nnmusicapp_api"
+		},
+		{
+			"path": "../Downloads/Student"
+		},
+		{
+			"path": "../IdeaProjects/tranthithaonguyen"
+		}
+	],
+	"settings": {
+		"liveServer.settings.multiRootWorkspaceName": "lab2",
+		"java.configuration.updateBuildConfiguration": "interactive",
+		"java.compile.nullAnalysis.mode": "disabled"
+	}
+}
