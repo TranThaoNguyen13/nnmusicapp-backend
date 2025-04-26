@@ -24,12 +24,13 @@ RUN cp .env.example .env || echo "APP_NAME=Laravel\nAPP_ENV=production\nAPP_KEY=
 # Tạo khóa ứng dụng
 RUN php artisan key:generate
 
-# Chạy migration (sẽ chạy sau khi có biến môi trường cơ sở dữ liệu)
-RUN php artisan migrate --force
-
 # Cấp quyền cho thư mục storage
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
 RUN chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
 
-# Chạy ứng dụng Laravel
-CMD php artisan serve --host 0.0.0.0 --port 10000
+# Copy và cấp quyền cho entrypoint script
+COPY entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
+
+# Chạy ứng dụng bằng entrypoint
+CMD ["/entrypoint.sh"]
