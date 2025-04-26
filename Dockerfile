@@ -1,4 +1,3 @@
-@"
 # Sử dụng image PHP chính thức với phiên bản PHP phù hợp (Laravel 11 yêu cầu PHP 8.2 trở lên)
 FROM php:8.2-fpm
 
@@ -31,4 +30,3 @@ RUN chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
 
 # Chạy ứng dụng Laravel
 CMD php artisan serve --host 0.0.0.0 --port 10000
-"@ | Out-File -FilePath Dockerfile -Encoding utf8
