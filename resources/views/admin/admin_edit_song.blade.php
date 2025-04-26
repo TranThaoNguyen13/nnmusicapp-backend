@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Dashboard - Thêm bài hát</title>
+    <title>Admin Dashboard - Chỉnh sửa bài hát</title>
     <style>
         /* Reset mặc định */
         * {
@@ -17,16 +17,15 @@
             background-color: #f4f7fa;
             color: #333;
             line-height: 1.6;
-            overflow: hidden; /* Ngăn cuộn toàn trang */
-            padding-top: 120px; /* Khoảng cách để thanh navigation không che nội dung */
+            overflow: hidden;
+            padding-top: 120px;
         }
 
-        /* Thanh navigation */
         nav {
             background-color: #fff;
             border-bottom: 1px solid #e5e7eb;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-            position: fixed; /* Cố định trên cùng */
+            position: fixed;
             top: 0;
             left: 0;
             width: 100%;
@@ -105,7 +104,6 @@
             cursor: pointer;
         }
 
-        /* Container */
         .container {
             width: 90%;
             max-width: 1400px;
@@ -113,10 +111,9 @@
             display: flex !important;
             flex-wrap: nowrap !important;
             gap: 2rem;
-            height: calc(100vh - 120px); /* Chiều cao container bằng chiều cao màn hình trừ thanh nav */
+            height: calc(100vh - 120px);
         }
 
-        /* Sidebar (Menu bên trái) */
         aside {
             width: 25%;
             background-color: #fff;
@@ -124,10 +121,10 @@
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
             padding: 1.5rem;
             border: 1px solid #e5e7eb;
-            position: fixed; /* Cố định menu bên trái */
-            top: 120px; /* Dưới thanh navigation */
+            position: fixed;
+            top: 120px;
             bottom: 0;
-            overflow-y: auto; /* Cuộn dọc nếu nội dung dài */
+            overflow-y: auto;
         }
 
         aside h2 {
@@ -166,7 +163,6 @@
             font-weight: 600;
         }
 
-        /* Content (Khung bên phải) */
         .content {
             width: 75%;
             background-color: #fff;
@@ -174,13 +170,12 @@
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
             padding: 2rem;
             border: 1px solid #e5e7eb;
-            margin-left: 27%; /* Khoảng cách để không bị che bởi menu bên trái */
-            height: calc(100vh - 120px); /* Chiều cao bằng màn hình trừ thanh nav */
-            overflow-y: auto; /* Cuộn dọc nếu nội dung dài */
-            overflow-x: hidden; /* Ngăn cuộn ngang */
+            margin-left: 27%;
+            height: calc(100vh - 120px);
+            overflow-y: auto;
+            overflow-x: hidden;
         }
 
-        /* Tiêu đề */
         .content h2 {
             font-size: 1.75rem;
             font-weight: 600;
@@ -188,7 +183,6 @@
             margin-bottom: 1.5rem;
         }
 
-        /* Form */
         form {
             margin-bottom: 2rem;
         }
@@ -256,7 +250,6 @@
             color: #0cc41e;
         }
 
-        /* Thông báo lỗi */
         .error-message {
             color: #ef4444;
             font-size: 0.875rem;
@@ -264,7 +257,6 @@
             display: block;
         }
 
-        /* Alert */
         .alert-success {
             background-color: #10b981;
             color: #fff;
@@ -281,7 +273,7 @@
         <div class="nav-container">
             <div class="logo">
                 <a href="/">
-                    <img src="{{ asset('images/logonnmusicapp.png') }}" alt="Logo">
+                <img src="{{ asset('images/logonnmusicapp.png') }}" alt="Logo">
                 </a>
             </div>
             <div class="user-menu">
@@ -320,7 +312,7 @@
                 </ul>
             </aside>
 
-            <!-- Khung 2: Form thêm bài hát -->
+            <!-- Khung 2: Form chỉnh sửa bài hát -->
             <div class="content">
                 <!-- Thông báo -->
                 @if (session('success'))
@@ -329,61 +321,36 @@
                     </div>
                 @endif
 
-                <!-- Form thêm bài hát -->
-                <h2>Thêm bài hát mới</h2>
-                <form action="{{ route('admin.createSong') }}" method="POST" enctype="multipart/form-data">
+                <!-- Form chỉnh sửa bài hát -->
+                <h2>Chỉnh sửa bài hát</h2>
+                <form action="{{ route('admin.updateSong', $song->id) }}" method="POST" enctype="multipart/form-data">
                     @csrf
+                    @method('PUT')
                     <div class="form-group">
                         <label for="title">Tiêu đề:</label>
-                        <input type="text" name="title" id="title" value="{{ old('title') }}" required>
+                        <input type="text" name="title" id="title" value="{{ old('title', $song->title) }}" required>
                         @error('title')
                             <span class="error-message">{{ $message }}</span>
                         @enderror
                     </div>
                     <div class="form-group">
                         <label for="artist">Nghệ sĩ:</label>
-                        <input type="text" name="artist" id="artist" value="{{ old('artist') }}" required>
+                        <input type="text" name="artist" id="artist" value="{{ old('artist', $song->artist) }}" required>
                         @error('artist')
                             <span class="error-message">{{ $message }}</span>
                         @enderror
                     </div>
                     <div class="form-group">
-                        <label for="file">File bài hát:</label>
-                        <input type="file" name="file" id="file" accept="audio/*" required>
+                        <label for="file">File bài hát (để trống nếu không thay đổi):</label>
+                        <input type="file" name="file" id="file" accept="audio/*">
                         @error('file')
                             <span class="error-message">{{ $message }}</span>
                         @enderror
-                    </div>
-                    <div class="form-group">
-                        <label for="quality">Chất lượng:</label>
-                        <select name="quality" id="quality">
-                            <option value="cao" {{ old('quality') == 'cao' ? 'selected' : '' }}>Cao</option>
-                            <option value="thap" {{ old('quality') == 'thap' ? 'selected' : '' }}>Thấp</option>
-                        </select>
-                        @error('quality')
-                            <span class="error-message">{{ $message }}</span>
-                        @enderror
-                    </div>
-                    <div class="form-group">
-                        <label for="trending_score">Điểm đánh giá:</label>
-                        <input type="number" name="trending_score" id="trending_score" value="{{ old('trending_score') }}" step="0.1" min="0" max="100">
-                        @error('trending_score')
-                            <span class="error-message">{{ $message }}</span>
-                        @enderror
-                    </div>
-                    <div class="form-group">
-                        <label for="is_recommended">Đề xuất:</label>
-                        <select name="is_recommended" id="is_recommended">
-                            <option value="1" {{ old('is_recommended') == '1' ? 'selected' : '' }}>Có</option>
-                            <option value="0" {{ old('is_recommended') == '0' ? 'selected' : '' }}>Không</option>
-                        </select>
-                        @error('is_recommended')
-                            <span class="error-message">{{ $message }}</span>
-                        @enderror
+                        <p>File hiện tại: {{ $song->file_path }}</p>
                     </div>
                     <div class="form-group">
                         <label for="thumbnail_url">Thumbnail URL:</label>
-                        <input type="url" name="thumbnail_url" id="thumbnail_url" value="{{ old('thumbnail_url') }}">
+                        <input type="url" name="thumbnail_url" id="thumbnail_url" value="{{ old('thumbnail_url', $song->thumbnail_url) }}">
                         @error('thumbnail_url')
                             <span class="error-message">{{ $message }}</span>
                         @enderror
@@ -393,7 +360,7 @@
                         <select name="album_id" id="album_id">
                             <option value="">Không có album</option>
                             @foreach($albums as $album)
-                                <option value="{{ $album->id }}" {{ old('album_id') == $album->id ? 'selected' : '' }}>{{ $album->title }}</option>
+                                <option value="{{ $album->id }}" {{ old('album_id', $song->album_id) == $album->id ? 'selected' : '' }}>{{ $album->title }}</option>
                             @endforeach
                         </select>
                         @error('album_id')
@@ -401,13 +368,40 @@
                         @enderror
                     </div>
                     <div class="form-group">
+                        <label for="quality">Chất lượng:</label>
+                        <select name="quality" id="quality">
+                            <option value="cao" {{ old('quality', $song->quality) == 'cao' ? 'selected' : '' }}>Cao</option>
+                            <option value="thap" {{ old('quality', $song->quality) == 'thap' ? 'selected' : '' }}>Thấp</option>
+                        </select>
+                        @error('quality')
+                            <span class="error-message">{{ $message }}</span>
+                        @enderror
+                    </div>
+                    <div class="form-group">
+                        <label for="trending_score">Điểm đánh giá:</label>
+                        <input type="number" name="trending_score" id="trending_score" value="{{ old('trending_score', $song->trending_score) }}" step="0.1" min="0" max="100">
+                        @error('trending_score')
+                            <span class="error-message">{{ $message }}</span>
+                        @enderror
+                    </div>
+                    <div class="form-group">
+                        <label for="is_recommended">Đề xuất:</label>
+                        <select name="is_recommended" id="is_recommended">
+                            <option value="1" {{ old('is_recommended', $song->is_recommended) == 1 ? 'selected' : '' }}>Có</option>
+                            <option value="0" {{ old('is_recommended', $song->is_recommended) == 0 ? 'selected' : '' }}>Không</option>
+                        </select>
+                        @error('is_recommended')
+                            <span class="error-message">{{ $message }}</span>
+                        @enderror
+                    </div>
+                    <div class="form-group">
                         <label for="lyrics">Lời bài hát:</label>
-                        <textarea name="lyrics" id="lyrics" rows="5">{{ old('lyrics') }}</textarea>
+                        <textarea name="lyrics" id="lyrics" rows="5">{{ old('lyrics', $song->lyrics) }}</textarea>
                         @error('lyrics')
                             <span class="error-message">{{ $message }}</span>
                         @enderror
                     </div>
-                    <button type="submit">Thêm bài hát</button>
+                    <button type="submit">Cập nhật bài hát</button>
                     <a href="{{ route('admin.songs') }}" class="cancel">Hủy</a>
                 </form>
             </div>

@@ -396,6 +396,97 @@
             margin-bottom: 1.5rem;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
+    .thumbnail-img {
+        width: 50px;
+        height: 50px;
+        object-fit: cover;
+        border-radius: 4px;
+        border: 1px solid #e5e7eb;
+    }
+    .table-container {
+        max-height: 500px; /* Chiều cao tối đa của bảng, có thể điều chỉnh */
+        overflow-y: auto; /* Kích hoạt cuộn dọc */
+        overflow-x: auto; /* Kích hoạt cuộn ngang */
+        border: 1px solid #e5e7eb; /* Đường viền cho bảng */
+        border-radius: 8px;
+    }
+
+    /* Định dạng bảng */
+    table {
+        width: 100%;
+        min-width: 1000px; /* Chiều rộng tối thiểu để kích hoạt cuộn ngang, có thể điều chỉnh */
+        border-collapse: collapse;
+    }
+
+    th, td {
+        padding: 0.75rem 1rem;
+        text-align: left;
+        border-bottom: 1px solid #e5e7eb;
+    }
+
+    th {
+        background-color: #f9fafb;
+        font-weight: 600;
+        color: #1f2937;
+        position: sticky; /* Giữ tiêu đề cố định khi cuộn dọc */
+        top: 0;
+        z-index: 10;
+    }
+
+    td {
+        color: #4b5563;
+    }
+
+    /* Định dạng hình ảnh thumbnail */
+    .thumbnail-img {
+        width: 50px;
+        height: 50px;
+        object-fit: cover;
+        border-radius: 4px;
+        border: 1px solid #e5e7eb;
+    }
+
+    /* Định dạng audio */
+    audio {
+        width: 200px; /* Chiều rộng cố định cho thẻ audio */
+    }
+
+    /* Định dạng cột hành động */
+    .actions {
+        display: flex;
+        gap: 0.5rem;
+    }
+
+    .actions a.edit {
+        color: #0cc41e;
+        text-decoration: none;
+        font-weight: 500;
+    }
+
+    .actions a.edit:hover {
+        color: #038d11;
+    }
+
+    .actions button.delete {
+        color: #ef4444;
+        background: none;
+        border: none;
+        font-weight: 500;
+        cursor: pointer;
+    }
+
+    .actions button.delete:hover {
+        color: #dc2626;
+    }
+
+    /* Định dạng khi không có dữ liệu */
+    .text-center {
+        text-align: center;
+    }
+
+    .text-gray-500 {
+        color: #6b7280;
+    }
     </style>
 </head>
 <body>
@@ -471,6 +562,7 @@
 
             <!-- Danh sách bài hát -->
             <div class="overflow-x-auto">
+            <div class="table-container">
                 <table>
                     <thead>
                         <tr>
@@ -478,7 +570,7 @@
                             <th>Tiêu đề</th>
                             <th>Nghệ sĩ</th>
                             <th>Album</th>
-                            <th>Đường dẫn</th>
+                            <th>File nhạc</th>
                             <th>Chất lượng</th>
                             <th>Điểm đánh giá</th>
                             <th>Đề xuất</th>
@@ -499,11 +591,23 @@
                                     <td>{{ $song->title }}</td>
                                     <td>{{ $song->artist }}</td>
                                     <td>{{ $song->album ? $song->album->title : 'Không có' }}</td>
-                                    <td>{{ $song->url }}</td>
+                                
+                                    <td>
+                                        <audio controls>
+                                            <source src="{{ asset('storage/songs/' . $song->file_path) }}" type="audio/mpeg">
+                                                Trình duyệt không hỗ trợ phát audio.
+                                        </audio>
+                                    </td>
                                     <td>{{ $song->quality }}</td>
                                     <td>{{ $song->trending_score }}</td>
                                     <td>{{ $song->is_recommended }}</td>
-                                    <td>{{ $song->thumbnail_url }}</td>
+                                    <td>
+                                         @if($song->thumbnail_url)
+                                            <img src="{{ $song->thumbnail_url }}" alt="{{ $song->title }}" class="thumbnail-img">
+                                        @else
+                                            Không có
+                                        @endif
+                                    </td>
                                     <td>{{ $song->lyrics }}</td>
                                     <td>
                                         <div class="actions">
@@ -520,6 +624,7 @@
                         @endif
                     </tbody>
                 </table>
+            </div>
             </div>
         </div>
     </div>

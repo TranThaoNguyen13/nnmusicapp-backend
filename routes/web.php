@@ -34,8 +34,8 @@ Route::middleware('auth')->group(function () {
     Route::delete('/admin/albums/{id}', [AdminController::class, 'deleteAlbum'])->name('admin.deleteAlbum');
     Route::get('/admin/users', [AdminController::class, 'users'])->name('admin.users');
     Route::delete('/admin/users/{id}', [AdminController::class, 'deleteUser'])->name('admin.deleteUser');
-    
-   
+    Route::get('/admin/songs/edit/{id}', [AdminController::class, 'editSong'])->name('admin.editSong');
+    Route::put('/admin/songs/update/{id}', [AdminController::class, 'updateSong'])->name('admin.updateSong');   
 });
 
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');

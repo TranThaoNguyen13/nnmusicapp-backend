@@ -52,25 +52,30 @@ class AdminController extends Controller
 
     public function createSong(Request $request)
     {
-        $request->validate([
+        $validated = $request->validate([
             'title' => 'required|string|max:255',
             'artist' => 'required|string|max:255',
-            'url' => 'nullable|url',
+            'file' => 'required|file|mimes:mp3,wav|max:10240', // Giới hạn file MP3/WAV, tối đa 10MB
             'thumbnail_url' => 'nullable|url',
             'album_id' => 'nullable|exists:albums,id',
+            'quality' => 'required|in:cao,thap',
+            'trending_score' => 'nullable|numeric|min:0|max:100',
+            'is_recommended' => 'required|boolean',
+            'lyrics' => 'nullable|string',
         ]);
 
-        Song::create([
-            'title' => $request->title,
-            'artist' => $request->artist,
-            'url' => $request->url,
-            'thumbnail_url' => $request->thumbnail_url,
-            'album_id' => $request->album_id,
-        ]);
+        // Upload file bài hát
+        if ($request->hasFile('file')) {
+            $file = $request->file('file');
+            $fileName = time() . '_' . $file->getClientOriginalName();
+            $file->storeAs('public/songs', $fileName);
+            $validated['file_path'] = $fileName; // Lưu vào cột file_path
+        }
 
-        return redirect()->route('admin.songs')->with('success', 'Thêm bài hát thành công!');
+        Song::create($validated);
+
+        return redirect()->route('admin.songs')->with('success', 'Bài hát đã được thêm thành công!');
     }
-
     public function editSong($id)
     {
         $song = Song::findOrFail($id);
@@ -79,35 +84,53 @@ class AdminController extends Controller
     }
 
     public function updateSong(Request $request, $id)
-    {
-        $song = Song::findOrFail($id);
+{
+    $song = Song::findOrFail($id);
 
-        $request->validate([
-            'title' => 'required|string|max:255',
-            'artist' => 'required|string|max:255',
-            'url' => 'nullable|url',
-            'thumbnail_url' => 'nullable|url',
-            'album_id' => 'nullable|exists:albums,id',
-        ]);
+    $validated = $request->validate([
+        'title' => 'required|string|max:255',
+        'artist' => 'required|string|max:255',
+        'file' => 'nullable|file|mimes:mp3,wav|max:10240',
+        'thumbnail_url' => 'nullable|url',
+        'album_id' => 'nullable|exists:albums,id',
+        'quality' => 'required|in:cao,thap',
+        'trending_score' => 'nullable|numeric|min:0|max:100',
+        'is_recommended' => 'required|boolean',
+        'lyrics' => 'nullable|string',
+    ]);
 
-        $song->update([
-            'title' => $request->title,
-            'artist' => $request->artist,
-            'url' => $request->url,
-            'thumbnail_url' => $request->thumbnail_url,
-            'album_id' => $request->album_id,
-        ]);
+    // Upload file bài hát mới (nếu có)
+    if ($request->hasFile('file')) {
+        // Xóa file cũ nếu tồn tại
+        if ($song->file_path && Storage::exists('public/songs/' . $song->file_path)) {
+            Storage::delete('public/songs/' . $song->file_path);
+        }
 
-        return redirect()->route('admin.songs')->with('success', 'Cập nhật bài hát thành công!');
+        $file = $request->file('file');
+        $fileName = time() . '_' . $file->getClientOriginalName();
+        $file->storeAs('public/songs', $fileName);
+        $validated['file_path'] = $fileName;
     }
 
+    // Cập nhật bài hát
+    $song->update($validated);
+
+    return redirect()->route('admin.songs')->with('success', 'Bài hát đã được cập nhật thành công!');
+}
     public function deleteSong($id)
-    {
-        $song = Song::findOrFail($id);
-        $song->delete();
+{
+    $song = Song::findOrFail($id);
 
-        return redirect()->route('admin.songs')->with('success', 'Xóa bài hát thành công!');
+    // Xóa file bài hát khỏi storage
+    if ($song->file_path && Storage::exists('public/songs/' . $song->file_path)) {
+        Storage::delete('public/songs/' . $song->file_path);
     }
+
+    // Xóa bài hát khỏi cơ sở dữ liệu
+    $song->delete();
+
+    return redirect()->route('admin.songs')->with('success', 'Bài hát đã được xóa thành công!');
+}
 
     public function createAlbum(Request $request)
     {
