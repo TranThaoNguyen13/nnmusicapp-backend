@@ -1,3 +1,4 @@
+
 # Sử dụng image PHP chính thức với phiên bản PHP phù hợp (Laravel 11 yêu cầu PHP 8.2 trở lên)
 FROM php:8.2-fpm
 
