@@ -52,30 +52,47 @@ class AdminController extends Controller
 
     public function createSong(Request $request)
     {
-        $validated = $request->validate([
-            'title' => 'required|string|max:255',
-            'artist' => 'required|string|max:255',
-            'file' => 'required|file|mimes:mp3,wav|max:10240', // Giới hạn file MP3/WAV, tối đa 10MB
-            'thumbnail_url' => 'nullable|url',
-            'album_id' => 'nullable|exists:albums,id',
-            'quality' => 'required|in:cao,thap',
-            'trending_score' => 'nullable|numeric|min:0|max:100',
-            'is_recommended' => 'required|boolean',
-            'lyrics' => 'nullable|string',
-        ]);
+        try {
+            // Validation cho tất cả các trường từ form
+            $validated = $request->validate([
+                'title' => 'required|string|max:255',
+                'artist' => 'required|string|max:255',
+                'file' => 'required|file|mimes:mp3,wav|max:51200', // 50MB
+                'quality' => 'required|in:cao,thap',
+                'trending_score' => 'nullable|numeric|min:0|max:100',
+                'is_recommended' => 'required|in:0,1',
+                'thumbnail_url' => 'nullable|url|max:1000',
+                'album_id' => 'nullable|exists:albums,id',
+                'lyrics' => 'nullable|string',
+            ]);
 
-        // Upload file bài hát
-        if ($request->hasFile('file')) {
-            $file = $request->file('file');
-            $fileName = time() . '_' . $file->getClientOriginalName();
-            $file->storeAs('public/songs', $fileName);
-            $validated['file_path'] = $fileName; // Lưu vào cột file_path
+            // Chuẩn bị dữ liệu để lưu vào database
+            $songData = $request->only([
+                'title',
+                'artist',
+                'quality',
+                'trending_score',
+                'is_recommended',
+                'thumbnail_url',
+                'album_id',
+                'lyrics',
+            ]);
+
+            // Xử lý file upload
+            if ($request->hasFile('file') && $request->file('file')->isValid()) {
+                $songData['file_path'] = $request->file('file')->store('songs', 'public');
+            }
+
+            // Tạo bài hát
+            Song::create($songData);
+
+            return redirect()->route('admin.songs')->with('success', 'Bài hát đã được thêm thành công.');
+        } catch (\Exception $e) {
+            \Log::error('Error creating song: ' . $e->getMessage());
+            return redirect()->route('admin.songs')->with('error', 'Không thể thêm bài hát: ' . $e->getMessage());
         }
-
-        Song::create($validated);
-
-        return redirect()->route('admin.songs')->with('success', 'Bài hát đã được thêm thành công!');
     }
+
     public function editSong($id)
     {
         $song = Song::findOrFail($id);
