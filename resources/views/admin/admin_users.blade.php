@@ -4,86 +4,260 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin - Quản lý Người dùng</title>
+    <style>
+        /* Căn chỉnh cơ bản */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f3f4f6;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+        }
+
+        /* Header */
+        header {
+            background-color: #2563eb;
+            color: white;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        header .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        header img {
+            height: 40px;
+            width: 40px;
+            margin-right: 12px;
+        }
+
+        header h1 {
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        header input[type="text"] {
+            width: 100%;
+            padding: 8px;
+            border-radius: 8px;
+            border: none;
+            color: #1f2937;
+            outline: none;
+            transition: all 0.3s ease-in-out;
+        }
+
+        header input[type="text"]:focus {
+            box-shadow: 0 0 0 2px #93c5fd;
+        }
+
+        header button {
+            background-color: #ef4444;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.2s ease-in-out;
+        }
+
+        header button:hover {
+            background-color: #dc2626;
+        }
+
+        /* Nội dung chính */
+        .container {
+            max-width: 1200px;
+            margin: 24px auto;
+            display: flex;
+            gap: 24px;
+        }
+
+        /* Menu bên trái */
+        aside {
+            width: 25%;
+            background-color: white;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            padding: 16px;
+        }
+
+        aside h2 {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 16px;
+        }
+
+        aside ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        aside li a {
+            display: block;
+            padding: 8px;
+            border-radius: 8px;
+            color: #1f2937;
+            text-decoration: none;
+            transition: background-color 0.2s ease-in-out;
+        }
+
+        aside li a:hover {
+            background-color: #dbeafe;
+        }
+
+        aside li a.active {
+            background-color: #bfdbfe;
+        }
+
+        /* Nội dung chính */
+        main {
+            width: 75%;
+            background-color: white;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            padding: 24px;
+        }
+
+        main h2 {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 16px;
+        }
+
+        /* Thông báo */
+        .success-message {
+            background-color: #22c55e;
+            color: white;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 16px;
+        }
+
+        /* Bảng danh sách người dùng */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            border: 1px solid #d1d5db;
+        }
+
+        table th, table td {
+            border: 1px solid #d1d5db;
+            padding: 12px;
+            text-align: left;
+        }
+
+        table th {
+            background-color: #e5e7eb;
+            font-weight: 600;
+        }
+
+        table tbody tr:hover {
+            background-color: #f9fafb;
+        }
+
+        table td button {
+            background-color: #ef4444;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.2s ease-in-out;
+        }
+
+        table td button:hover {
+            background-color: #dc2626;
+        }
+    </style>
 </head>
-<body class="bg-gray-100 font-sans">
+<body>
     <!-- Header -->
-    <header class="bg-blue-600 text-white shadow-md">
-        <div class="container mx-auto px-4 py-3 flex items-center justify-between">
+    <header>
+        <div class="container">
             <!-- Logo -->
-            <div class="flex items-center">
-                <img src="https://via.placeholder.com/40" alt="Logo" class="h-10 w-10 mr-3">
-                <h1 class="text-xl font-bold">Admin Dashboard</h1>
+            <div style="display: flex; align-items: center;">
+                <img src="https://via.placeholder.com/40" alt="Logo">
+                <h1>Admin Dashboard</h1>
             </div>
 
             <!-- Thanh tìm kiếm -->
-            <div class="flex-1 mx-6">
-                <input type="text" placeholder="Tìm kiếm..." class="w-full p-2 rounded-lg text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-300">
+            <div style="flex: 1; margin: 0 24px;">
+                <input type="text" placeholder="Tìm kiếm...">
             </div>
 
             <!-- Nút Logout -->
             <div>
                 <form action="{{ route('logout') }}" method="POST">
                     @csrf
-                    <button type="submit" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg">Logout</button>
+                    <button type="submit">Logout</button>
                 </form>
             </div>
         </div>
     </header>
 
     <!-- Nội dung chính -->
-    <div class="container mx-auto mt-6 flex gap-6">
+    <div class="container">
         <!-- Khung 1: Menu quản lý -->
-        <aside class="w-1/4 bg-white shadow-md rounded-lg p-4">
-            <h2 class="text-lg font-semibold mb-4">Quản lý</h2>
-            <ul class="space-y-2">
+        <aside>
+            <h2>Quản lý</h2>
+            <ul>
                 <li>
-                    <a href="{{ route('admin.songs') }}" class="block p-2 rounded-lg hover:bg-blue-100 {{ request()->routeIs('admin.songs') ? 'bg-blue-200' : '' }}">Quản lý bài hát</a>
+                    <a href="{{ route('admin.songs') }}" class="{{ request()->routeIs('admin.songs') ? 'active' : '' }}">Quản lý bài hát</a>
                 </li>
                 <li>
-                    <a href="{{ route('admin.albums') }}" class="block p-2 rounded-lg hover:bg-blue-100 {{ request()->routeIs('admin.albums') ? 'bg-blue-200' : '' }}">Quản lý album</a>
+                    <a href="{{ route('admin.albums') }}" class="{{ request()->routeIs('admin.albums') ? 'active' : '' }}">Quản lý album</a>
                 </li>
                 <li>
-                    <a href="{{ route('admin.users') }}" class="block p-2 rounded-lg hover:bg-blue-100 {{ request()->routeIs('admin.users') ? 'bg-blue-200' : '' }}">Quản lý người dùng</a>
+                    <a href="{{ route('admin.users') }}" class="{{ request()->routeIs('admin.users') ? 'active' : '' }}">Quản lý người dùng</a>
                 </li>
             </ul>
         </aside>
 
         <!-- Khung 2: Nội dung quản lý người dùng -->
-        <main class="w-3/4 bg-white shadow-md rounded-lg p-6">
+        <main>
             <!-- Thông báo -->
             @if (session('success'))
-                <div class="bg-green-500 text-white p-3 rounded-lg mb-4">
+                <div class="success-message">
                     {{ session('success') }}
                 </div>
             @endif
 
             <!-- Danh sách người dùng -->
-            <h2 class="text-xl font-bold mb-4">Danh sách người dùng</h2>
-            <div class="overflow-x-auto">
-                <table class="w-full border-collapse border border-gray-300">
+            <h2>Danh sách người dùng</h2>
+            <div style="overflow-x: auto;">
+                <table>
                     <thead>
-                        <tr class="bg-gray-200">
-                            <th class="border border-gray-300 p-3 text-left">ID</th>
-                            <th class="border border-gray-300 p-3 text-left">Tên</th>
-                            <th class="border border-gray-300 p-3 text-left">Email</th>
-                            <th class="border border-gray-300 p-3 text-left">Password</th>
-                            <th class="border border-gray-300 p-3 text-left">Role</th>
-                            <th class="border border-gray-300 p-3 text-left">Hành động</th>
+                        <tr>
+                            <th>ID</th>
+                            <th>Tên</th>
+                            <th>Email</th>
+                            <th>Password</th>
+                            <th>Role</th>
+                            <th>Hành động</th>
                         </tr>
                     </thead>
                     <tbody>
                         @foreach($users as $user)
                             <tr>
-                                <td class="border border-gray-300 p-3">{{ $user->id }}</td>
-                                <td class="border border-gray-300 p-3">{{ $user->name }}</td>
-                                <td class="border border-gray-300 p-3">{{ $user->email }}</td>
-                                <td class="border border-gray-300 p-3">{{ $user->password }}</td>
-                                <td class="border border-gray-300 p-3">{{ $user->role }}</td>
-                                <td class="border border-gray-300 p-3">
+                                <td>{{ $user->id }}</td>
+                                <td>{{ $user->name }}</td>
+                                <td>{{ $user->email }}</td>
+                                <td>{{ $user->password }}</td>
+                                <td>{{ $user->role }}</td>
+                                <td>
                                     <form action="{{ route('admin.deleteUser', $user->id) }}" method="POST" onsubmit="return confirm('Bạn có chắc chắn muốn xóa?');">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit" class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-lg">Xóa</button>
+                                        <button type="submit">Xóa</button>
                                     </form>
                                 </td>
                             </tr>
