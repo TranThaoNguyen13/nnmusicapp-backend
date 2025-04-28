@@ -10,6 +10,11 @@ class Song extends Model
         'is_recommended', 'thumbnail_url', 'album_id', 'lyrics'
     ];
 
+    protected $casts = [
+        'is_recommended' => 'boolean',
+        'trending_score' => 'float',
+    ];
+
     public function album()
     {
         return $this->belongsTo(Album::class);
