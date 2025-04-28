@@ -1,6 +1,10 @@
 #!/bin/bash
-# Chạy migration
+
+# Chạy migration để tạo bảng sessions và các bảng khác
 php artisan migrate --force
 
-# Chạy ứng dụng
-php-fpm
+# Khởi động PHP-FPM
+php-fpm -D
+
+# Khởi động Nginx
+nginx -g "daemon off;"
