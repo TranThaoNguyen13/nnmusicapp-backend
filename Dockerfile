@@ -29,7 +29,7 @@ RUN php artisan key:generate
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
 RUN chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
 
-# Cấu hình Nginx
+# Copy file cấu hình Nginx
 COPY nginx.conf /etc/nginx/sites-available/default
 
 # Copy và cấp quyền cho entrypoint script
