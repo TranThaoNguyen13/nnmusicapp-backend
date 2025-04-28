@@ -281,7 +281,7 @@
         <div class="nav-container">
             <div class="logo">
                 <a href="/">
-                    <img src="{{ asset('images/logonnmusicapp.png') }}" alt="Logo">
+                <img src="{{ asset('images/logonnmusicapp.png') }}" alt="Logo">
                 </a>
             </div>
             <div class="user-menu">
