@@ -24,9 +24,6 @@ RUN cp .env.example .env || echo "APP_NAME=Laravel\nAPP_ENV=production\nAPP_KEY=
 # Tạo khóa ứng dụng
 RUN php artisan key:generate
 
-# Chạy migration để tạo bảng sessions (nếu chưa có)
-RUN php artisan migrate --force
-
 # Cấp quyền cho thư mục storage
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
 RUN chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
