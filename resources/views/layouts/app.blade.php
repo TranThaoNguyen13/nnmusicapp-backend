@@ -14,7 +14,7 @@
                     <div class="flex">
                         <div class="shrink-0 flex items-center">
                             <a href="/">
-                                <img src="{{ asset('images/logonnmusicapp.png') }}" alt="Logo" class="w-10 h-10 rounded-full">
+                            <img src="/images/logonnmusicapp.png" alt="Logo" class="w-10 h-10 rounded-full">
                             </a>
                         </div>
                     </div>
