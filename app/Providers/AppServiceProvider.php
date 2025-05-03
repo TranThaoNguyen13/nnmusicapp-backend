@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\URL;
+use Illuminate\Support\Facades\DB;
 use Doctrine\DBAL\Types\Type;
 
 class AppServiceProvider extends ServiceProvider
