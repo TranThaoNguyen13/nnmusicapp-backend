@@ -4,7 +4,6 @@ namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\URL;
-use Illuminate\Database\Connection; // Sửa đúng namespace
 use Doctrine\DBAL\Types\Type;
 
 class AppServiceProvider extends ServiceProvider
@@ -29,6 +28,7 @@ class AppServiceProvider extends ServiceProvider
         if (env('APP_ENV') === 'production') {
             \URL::forceScheme('https');
         }
-        Connection::getDoctrineSchemaManager()->getDatabasePlatform()->registerDoctrineTypeMapping('enum', 'string');
+        $connection = DB::connection(); // Lấy instance của Connection
+        $connection->getDoctrineSchemaManager()->getDatabasePlatform()->registerDoctrineTypeMapping('enum', 'string');
     }
 }
