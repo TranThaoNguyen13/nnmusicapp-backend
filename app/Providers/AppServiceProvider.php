@@ -4,6 +4,8 @@ namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\URL;
+use Illuminate\Database\Connection; // Sửa đúng namespace
+use Doctrine\DBAL\Types\Type;
 
 class AppServiceProvider extends ServiceProvider
 {
