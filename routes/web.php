@@ -42,3 +42,6 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 require __DIR__.'/auth.php';
 // Route::get('/admin/songs', [AdminController::class, 'showAdminDashboard'])->name('admin.songs');
+Route::get('/test', function () {
+    return view('test');
+});
