@@ -29,7 +29,13 @@ class AppServiceProvider extends ServiceProvider
         if (env('APP_ENV') === 'production') {
             \URL::forceScheme('https');
         }
-        $connection = DB::connection(); // Lấy instance của Connection
-        $connection->getDoctrineSchemaManager()->getDatabasePlatform()->registerDoctrineTypeMapping('enum', 'string');
+        try {
+            // Chỉ gọi khi kết nối database sẵn sàng
+            $connection = DB::connection();
+            $connection->getDoctrineSchemaManager()->getDatabasePlatform()->registerDoctrineTypeMapping('enum', 'string');
+        } catch (\Exception $e) {
+            // Bỏ qua lỗi kết nối database trong giai đoạn build
+            \Log::error('Failed to register Doctrine type mapping: ' . $e->getMessage());
+        }
     }
 }
